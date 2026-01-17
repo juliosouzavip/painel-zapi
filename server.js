@@ -6,7 +6,8 @@ import axios from "axios";
 
 import Cliente from "./models/Cliente.js";
 import Motorista from "./models/Motorista.js";
-import Atribuicao from "./models/Atribuicao.js";
+import { Atribuicao } from "./models/Atribuicao.js";
+
 import Mensagem from "./models/Mensagem.js";
 import { pendentes, motoristas, atribuicoes, atribuirCliente } from "./database.js";
 
