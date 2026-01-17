@@ -23,9 +23,12 @@ async function sendText(phone, text) {
 }
 
 app.post("/webhook", async (req, res) => {
-  const { from, body } = req.body;
+ console.log("Webhook recebido:", req.body);
 
-  console.log("Webhook recebido:", from, body);
+const from = req.body.from || "número-desconhecido";
+const message = req.body.message?.text || req.body.text || "mensagem-desconhecida";
+
+console.log(`Mensagem de ${from}: ${message}`);
 
   if (!atribuicoes[from]) {
     if (!pendentes.includes(from)) pendentes.push(from);
