@@ -23,23 +23,27 @@ async function sendText(phone, text) {
 }
 
 app.post("/webhook", async (req, res) => {
- console.log("Webhook recebido:", req.body);
+  // Extrai informações da mensagem recebida
+  const from = req.body.from || "número-desconhecido";
+  const message = req.body.message?.text || req.body.text || "mensagem-desconhecida";
 
-const from = req.body.from || "número-desconhecido";
-const message = req.body.message?.text || req.body.text || "mensagem-desconhecida";
+  // Log para debug
+  console.log(`Mensagem recebida de ${from}: ${message}`);
 
-console.log(`Mensagem de ${from}: ${message}`);
-
+  // Verifica se o número ainda não foi atribuído
   if (!atribuicoes[from]) {
     if (!pendentes.includes(from)) pendentes.push(from);
     return res.sendStatus(200);
   }
 
+  // Já está atribuído, encaminha a mensagem
   const target = atribuicoes[from];
-  await sendText(target, body);
+  await sendText(target, message);
+
   res.sendStatus(200);
 });
 
+// Endpoints de visualização e controle
 app.get("/pendentes", (req, res) => res.json(pendentes));
 app.get("/motoristas", (req, res) => res.json(motoristas));
 
@@ -49,5 +53,6 @@ app.post("/atribuir", (req, res) => {
   res.json({ ok: true });
 });
 
+// Inicia o servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("Servidor rodando na porta", PORT));
